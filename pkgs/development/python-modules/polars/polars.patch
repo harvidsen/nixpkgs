@@ -1,0 +1,13 @@
+diff --git a/crates/polars-arrow/src/lib.rs b/crates/polars-arrow/src/lib.rs
+index a65309aa0..04866d093 100644
+--- a/crates/polars-arrow/src/lib.rs
++++ b/crates/polars-arrow/src/lib.rs
+@@ -13,6 +13,8 @@
+ #![cfg_attr(feature = "nightly", allow(clippy::non_canonical_partial_ord_impl))] // Remove once stable.
+ #![cfg_attr(feature = "nightly", allow(clippy::blocks_in_conditions))] // Remove once stable.
+
++#![feature(packed-simd)]
++
+ extern crate core;
+
+ #[macro_use]

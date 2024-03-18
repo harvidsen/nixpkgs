@@ -13,12 +13,12 @@
 }:
 let
   pname = "polars";
-  version = "0.19.12";
+  version = "0.20.7";
   rootSource = fetchFromGitHub {
     owner = "pola-rs";
     repo = "polars";
     rev = "refs/tags/py-${version}";
-    hash = "sha256-6tn3Q6oZfMjgQ5l5xCFnGimLSDLOjTWCW5uEbi6yFZY=";
+    hash = "sha256-R3by/e28HE+1xq+HQd9wYy/iK+fDM6/IfKuc563atX4=";
   };
   rust-jemalloc-sys' = rust-jemalloc-sys.override {
     jemalloc = jemalloc.override {
@@ -39,6 +39,8 @@ buildPythonPackage {
   # Make sure to check that the right substitutions are made when updating the package
   preBuild = ''
     #sed -i 's/version = "0.18.0"/version = "${version}"/g' Cargo.lock
+
+    #cp ${rootSource}/rust-toolchain.toml ./py-polars/rust-toolchain.toml
   '';
 
   cargoDeps = rustPlatform.importCargoLock {
@@ -48,7 +50,16 @@ buildPythonPackage {
     };
   };
 
-  sourceRoot = "source/py-polars";
+  buildAndTestSubdir = "py-polars"; # Make maturin find python package
+
+  patches = [
+    ./polars.patch
+  ];
+
+  # maturinBuildFlags = [
+  #   "-Z allow-features=simd"
+  #   # "+nightly" # polars-arrow uses nightly features
+  # ];
 
   # Revisit this whenever package or Rust is upgraded
   RUSTC_BOOTSTRAP = 1;
